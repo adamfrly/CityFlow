@@ -1,6 +1,8 @@
 import cityflow
+import gym
 
-eng = cityflow.Engine("./config/heur_config.json")
+
+eng = cityflow.Engine("./config/rl_config.json")
 
 eng.reset()
 for i in range(75):
