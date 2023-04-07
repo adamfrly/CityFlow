@@ -35,6 +35,9 @@ class CityFlowEnv(gym.Env):
     def _get_reward(self):
         pass #TODO Implement this
 
+    def _get_state(self):
+        pass #TODO Implement this
+
     def reset(self, seed=None):
         super.reset(seed=seed)
         self.cityflow.reset()
@@ -50,5 +53,26 @@ class CityFlowEnv(gym.Env):
     def render(self, mode='human'):
         print("Current time: " + self.cityflow.get_current_time())
     
-    def step(self):
-        pass
+    def step(self, action):
+        assert self.action_space.contains(action), f"Invalid action {action}, {type(action)}"
+
+        self.cityflow.set_tl_phase(self.intersection_id, action)
+        self.cityflow.next_step()
+
+        state = self._get_state()
+        reward = self._get_reward()
+        info = self._get_info()
+
+        self.current_step = self.current_step + 1
+
+        if self.is_done:
+            logger.warn("You are calling 'step()' even though this environment has already returned done = True. "
+                        "You should always call 'reset()' once you receive 'done = True' "
+                        "-- any further steps are undefined behavior.")
+            reward = 0.0
+
+        if self.current_step + 1 == self.steps_per_episode:
+            self.is_done = True
+
+        return state, reward, self.is_done, info
+    
