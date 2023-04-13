@@ -2,8 +2,7 @@ import gym
 from gym import spaces, logger
 import cityflow
 import numpy as np
-import os
-import functools
+
 
 # TODO Write function to convert roadnet file specified in config to a state space and to determine legal action space
 # State space will be one element for each lane in the intersection and its magnitude will be the number of cars in that lane.
@@ -23,7 +22,7 @@ class CityFlow1IntEnv(gym.Env):
         self.current_step = 0
         self.is_done = False
         self.reward_range = (-float('inf'), float('inf'))
-        self.action_space = spaces.Discrete(9)
+        self.action_space = spaces.MultiBinary(9)
 
         self.cityflow = cityflow.Engine(self.config_file)
 

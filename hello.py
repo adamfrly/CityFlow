@@ -1,10 +1,13 @@
 import cityflow
 import gym
+import gym_envs.cityflowenv
+import numpy as np
 
 
-eng = cityflow.Engine("./config/rl_config.json")
-
-eng.reset()
+env = gym.make('gym_envs.cityflowenvs.envs:cityflow1intenv')
+env.reset()
 for i in range(75):
-    eng.next_step()
-
+    env.next_step()
+    while not is_done:
+        action = np.random.randint(low=0, high=9)
+        state, reward, is_done, _ = env.step(action)
