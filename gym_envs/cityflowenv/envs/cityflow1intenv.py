@@ -45,7 +45,6 @@ class CityFlow1IntEnv(gym.Env):
         return self.cityflow.get_average_travel_time()
 
     def reset(self, seed=None):
-        super.reset(seed=seed)
         self.cityflow.reset()
 
         self.is_done = False

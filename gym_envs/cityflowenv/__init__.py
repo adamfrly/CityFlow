@@ -4,11 +4,11 @@ from gym.envs.registration import register
 logger = logging.getLogger(__name__)
 
 register(
-    id='cityflowenvs:CityFlowOneInt',
-    entry_point='cityflowenvs.envs:cityflow1intenv',
+    id='OneIntersection-v0',
+    entry_point='cityflowenv.envs:CityFlow1IntEnv',
 )
 
 register(
-    id='CityFlowEnvs:CityFlow',
-    entry_point='cityflowenvs.envs:cityflowenv',
+    id='GeneralCity-v0',
+    entry_point='cityflowenv.envs:CityFlowEnv',
 )

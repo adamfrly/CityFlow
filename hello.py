@@ -1,13 +1,14 @@
 import cityflow
 import gym
+from gym import spaces
 import cityflowenv 
 import numpy as np
 
 
-env = gym.make('gym_envs.cityflowenvs.envs:cityflow1intenv')
+env = gym.make('OneIntersection-v0', config_file="config/rl_config.json")
 env.reset()
-for i in range(75):
-    env.next_step()
+is_done = False
+for i in range(5):
     while not is_done:
-        action = np.random.randint(low=0, high=9)
+        action = env.action_space.sample()
         state, reward, is_done, _ = env.step(action)
