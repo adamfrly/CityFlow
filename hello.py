@@ -1,6 +1,6 @@
 import cityflow
 import gym
-import gym_envs.cityflowenv
+import cityflowenv 
 import numpy as np
 
 

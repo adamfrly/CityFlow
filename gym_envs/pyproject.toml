@@ -1,7 +1,0 @@
-[project]
-name="cityflowenv"
-version="0.0.1"
-dependencies = [
-    'gym',
-    'cityflow',
-]

@@ -1,11 +1,14 @@
+import logging
 from gym.envs.registration import register
+
+logger = logging.getLogger(__name__)
 
 register(
     id='cityflowenvs:CityFlowOneInt',
-    entry_point='gym_envs.cityflowenvs.envs:cityflow1intenv',
+    entry_point='cityflowenvs.envs:cityflow1intenv',
 )
 
 register(
     id='CityFlowEnvs:CityFlow',
-    entry_point='gym_envs.cityflowenvs.envs:cityflowenv',
+    entry_point='cityflowenvs.envs:cityflowenv',
 )
