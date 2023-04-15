@@ -18,11 +18,12 @@ class CityFlow1IntEnv(gym.Env):
         assert render_mode is None or render_mode in self.metadata["render_modes"]
         self.render_mode = render_mode
 
-        self.steps_per_episode = 1500
+        self.steps_per_episode = 3000
         self.current_step = 0
         self.is_done = False
         self.reward_range = (-float('inf'), float('inf'))
-        self.action_space = spaces.MultiBinary(9)
+        self.action_space = spaces.Discrete(8)
+        self.intersection_id = "intersection_1_1"
 
         self.cityflow = cityflow.Engine(self.config_file)
 
