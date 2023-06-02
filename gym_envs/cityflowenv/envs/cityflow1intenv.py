@@ -1,5 +1,5 @@
-import gym
-from gym import spaces, logger
+import gymnasium as gym
+from gymnasium import spaces, logger
 import cityflow
 import numpy as np
 
@@ -10,7 +10,7 @@ import numpy as np
 
 class CityFlow1IntEnv(gym.Env):
 
-    metadata = {'render.modes':['human']}
+    metadata = {'render_modes':['human']}
     def __init__(self, config_file=None, render_mode=None):
         super().__init__()
         self.config_file = config_file
@@ -23,6 +23,7 @@ class CityFlow1IntEnv(gym.Env):
         self.is_done = False
         self.reward_range = (-float('inf'), float('inf'))
         self.action_space = spaces.Discrete(8)
+        self.observation_space = spaces.Box(low=0, high=np.inf, shape=(56,), dtype=np.int32) # 7 Lane, 4 Directions to come from, 1 Entry, 1 Exit from the intersection, each in [0, inf)
         self.intersection_id = "intersection_1_1"
 
         self.cityflow = cityflow.Engine(self.config_file)
@@ -33,19 +34,22 @@ class CityFlow1IntEnv(gym.Env):
         waiting_vechiles_dict = self.cityflow.get_lane_waiting_vehicle_count()
         total_vehicles_dict = {k: lane_vehicles_dict.get(k, 0) + waiting_vechiles_dict.get(k, 0) for k in set(lane_vehicles_dict)|set(waiting_vechiles_dict)}
 
-        obs = np.array(total_vehicles_dict.values())
+        obs = np.array(list(total_vehicles_dict.values()), dtype=np.int32)
         return obs
         
 
     def _get_info(self):
-        pass #TODO Add statuses of each traffic light and how many cars each light has let through
+        return {"foo": "bar"} #TODO Add statuses of each traffic light and how many cars each light has let through
              # Brainstorm more info that could be useful (typically stuff that's the agent isn't allowed to see related to rewards)
 
     def _get_reward(self):
-        # Multiple potential reward signals: 1. The total number of vehicles in the intersection 2. The average velocity of the vehichles in the interesection 3. Average waiting time of all vehicles at the intersection
+        # Multiple potential reward signals: 
+        # 1. The total number of vehicles in the intersection 
+        # 2. The average velocity of the vehichles in the interesection
+        # 3. Average waiting time of all vehicles at the intersection
         return self.cityflow.get_average_travel_time()
 
-    def reset(self, seed=None):
+    def reset(self, seed=None, **options):
         self.cityflow.reset()
 
         self.is_done = False
@@ -56,8 +60,9 @@ class CityFlow1IntEnv(gym.Env):
 
         return observation, info
     
-    def render(self, mode='human'):
-        print("Current time: " + self.cityflow.get_current_time())
+    def render(self):
+        if self.render_mode == "human":
+            print("Current time: " + str(self.cityflow.get_current_time()))
     
     def step(self, action):
         assert self.action_space.contains(action), f"Invalid action {action}, {type(action)}"
@@ -79,6 +84,9 @@ class CityFlow1IntEnv(gym.Env):
 
         if self.current_step + 1 == self.steps_per_episode:
             self.is_done = True
+        
+        if self.render_mode == "human":
+            self.render()
 
-        return state, reward, self.is_done, info
+        return state, reward, self.is_done, False, info # False is for truncation which is never possible in this env by design
     
