@@ -1,5 +1,5 @@
-import gymnasium as gym
-from gymnasium import spaces, logger
+import gym as gym
+from gym import spaces, logger
 import cityflow
 import numpy as np
 
@@ -21,9 +21,9 @@ class CityFlow1IntEnv(gym.Env):
         self.steps_per_episode = 3000
         self.current_step = 0
         self.is_done = False
-        self.reward_range = (-float('inf'), float('inf'))
+        self.reward_range = (0, np.inf)
         self.action_space = spaces.Discrete(8)
-        self.observation_space = spaces.Box(low=0, high=np.inf, shape=(56,), dtype=np.int32) # 7 Lane, 4 Directions to come from, 1 Entry, 1 Exit from the intersection, each in [0, inf)
+        self.observation_space = spaces.Box(low=0, high=np.inf, shape=(56,)) # 7 Lane, 4 Directions to come from, 1 Entry, 1 Exit from the intersection, each in [0, inf)
         self.intersection_id = "intersection_1_1"
 
         self.cityflow = cityflow.Engine(self.config_file)
@@ -34,7 +34,7 @@ class CityFlow1IntEnv(gym.Env):
         waiting_vechiles_dict = self.cityflow.get_lane_waiting_vehicle_count()
         total_vehicles_dict = {k: lane_vehicles_dict.get(k, 0) + waiting_vechiles_dict.get(k, 0) for k in set(lane_vehicles_dict)|set(waiting_vechiles_dict)}
 
-        obs = np.array(list(total_vehicles_dict.values()), dtype=np.int32)
+        obs = np.array(list(total_vehicles_dict.values()), dtype=np.float32)
         return obs
         
 
