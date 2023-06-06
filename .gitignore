@@ -13,3 +13,4 @@ frontend/replay/*
 replay/*
 cityflow.cpython*
 *.egg-info/
+models/

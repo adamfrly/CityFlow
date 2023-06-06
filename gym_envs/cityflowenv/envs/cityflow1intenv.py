@@ -1,5 +1,5 @@
-import gym as gym
-from gym import spaces, logger
+import gymnasium as gym
+from gymnasium import spaces, logger
 import cityflow
 import numpy as np
 
@@ -22,8 +22,13 @@ class CityFlow1IntEnv(gym.Env):
         self.current_step = 0
         self.is_done = False
         self.reward_range = (0, np.inf)
+
+        low = np.array([0] * 56, dtype=np.float32)
+        high = np.array([np.finfo(np.float32).max] * 56, dtype=np.float32)
+
         self.action_space = spaces.Discrete(8)
-        self.observation_space = spaces.Box(low=0, high=np.inf, shape=(56,)) # 7 Lane, 4 Directions to come from, 1 Entry, 1 Exit from the intersection, each in [0, inf)
+        self.observation_space = spaces.Box(low=low, high=high, dtype=np.float32) # 7 Lane, 4 Directions to come from, 1 Entry, 1 Exit from the intersection, each in [0, inf)
+        
         self.intersection_id = "intersection_1_1"
 
         self.cityflow = cityflow.Engine(self.config_file)
@@ -55,10 +60,10 @@ class CityFlow1IntEnv(gym.Env):
         self.is_done = False
         self.current_step = 0
         
-        observation = self._get_obs()
+        obs = self._get_obs()
         info = self._get_info()
 
-        return observation, info
+        return obs, info
     
     def render(self):
         if self.render_mode == "human":
