@@ -10,7 +10,7 @@ __pycache__
 CMakeSettings.json
 cmake-build-*
 frontend/replay/*
-replay/*
+replay/
 cityflow.cpython*
 *.egg-info/
 models/
